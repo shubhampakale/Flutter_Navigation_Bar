@@ -1,74 +1,81 @@
-
 import 'package:flutter/material.dart';
+import 'package:googlenav/home.dart';
+import 'package:googlenav/items.dart';
+import 'package:googlenav/orders.dart';
+import 'package:googlenav/profile.dart';
+
 import 'package:line_icons/line_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String? title;
+void main() => runApp(MaterialApp(
+  builder: (context,child)
+  {
+    return Directionality(textDirection: TextDirection.ltr, child: child!);
+  },
+  title: "Gnav",
+  theme: ThemeData(
+    primarySwatch: Colors.blueGrey,
+  ),
+  home: MyHomePage(),
+  debugShowCheckedModeBanner: false,
+  ),);
+
+class MyHomePage extends StatefulWidget
+{
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int selectedIndex = 0;
-  int badge = 0;
-
-  List<GButton> tabs = [];
-  List<Color> colors = [
-    Colors.deepPurpleAccent,
-    Colors.pink,
-    Colors.amber[600]!,
-    Colors.teal,
-    Colors.lightBlue
-  ];
-
   @override
-  void initState() {
-    super.initState();
-  }
+  int _selectedindex  = 0;
 
-  void _tabChanged(int index)
-  {
-    badge = badge + 1;
-    setState(() {
-      selectedIndex = index;
-    });
-  }
+  static final List<Widget> _NavScreens = <Widget>[
+    Home(),
+    Items(),
+    Orders(),
+    Profile(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: AnimatedContainer(
-        duration: Duration(milliseconds: 100),
-        color: colors[selectedIndex],
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
+          appBar: AppBar(
+            leading: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Image.asset('assets/images/download.png',
+                  width: 50.0,
+                  height: 60.0,
+                ),
+              ],
+            ),
+            title: const Text('PCCOE Canteen Katta',
+              style: TextStyle(
+                fontFamily: 'Caveat',
+                color: Colors.white, // change the text color to white
+                fontSize: 30.0, // change the font size to 20
+              ),
+            ),
+
+            // leading: Icon(Icons.account_circle_rounded),
+            backgroundColor: Colors.black,
+
+
+          ),
+          body: Center(child: _NavScreens.elementAt(_selectedindex),),
+          backgroundColor: Colors.black,
+          bottomNavigationBar:
 
               Container(
-                decoration: BoxDecoration(color: Colors.black),
+                decoration: BoxDecoration(color: Colors.black),//bottom container
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 22.0, vertical: 10),
                   child: GNav(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                     duration: Duration(milliseconds: 100),
@@ -82,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         iconSize: 24,
                         icon: LineIcons.home,
                         text: 'Home',
+
                       ),
                       GButton(
                         iconActiveColor: Colors.pink,
@@ -96,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         iconActiveColor: Colors.amber[600],
                         iconColor: Colors.white,
                         textColor: Colors.amber[600],
-                        backgroundColor: Colors.amber[600]!.withOpacity(.2),
+                        backgroundColor: Colors.amber[600]!.withOpacity(
+                            .2),
                         iconSize: 24,
                         icon: LineIcons.shoppingCartArrowDown,
                         text: 'Orders',
@@ -111,15 +120,27 @@ class _MyHomePageState extends State<MyHomePage> {
                         text: 'Profile',
                       )
                     ],
-                    selectedIndex: selectedIndex,
-                    onTabChange: _tabChanged,
+                    selectedIndex: _selectedindex,
+                    onTabChange: (index){
+                      setState(() {
+                        _selectedindex=index;
+                      });
+                    },
+
+
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+
+
+
+
+
     );
   }
 }
+
+
+
+
+
